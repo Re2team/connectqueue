@@ -77,6 +77,7 @@ Queue.RemovePriority("STEAM_0:1:33459672")
 ## IsReady
 Will return whether or not the queue's exports are ready to be called.
 ```Lua
+
 print(Queue.IsReady())
 ```
 
@@ -92,4 +93,28 @@ Queue.Exports:IsPriority(ids)
 --- returns size of queue
 Queue.Exports:GetSize()
 -- plus many more...
+```
+
+
+## Discord Whitelist And Role Priority
+To Enable Discord Whitelist You need to Update server -> sv_queue_config.lua line 71 To 85
+
+```Lua
+Config.enableDiscordWhitelist = false -- For Enable Whitelist System
+Config.discordServerGuild = "" -- Discord Server ID to check it if player is in the server
+Config.discordBotToken = ""  -- Discord Token Bot - You Can Create at https://discord.com/developers/applications
+
+
+Config.Roles = {
+	member = {
+		roleID = "", --Role ID
+		point = 15,  -- any bigger point can push player on the first row of queue
+	},
+    vip = {
+		roleID = "", --Role ID
+		point = 20,  -- any bigger point can push player on the first row of queue
+	},
+
+}
+
 ```
