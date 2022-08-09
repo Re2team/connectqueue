@@ -813,6 +813,7 @@ AddEventHandler("onResourceStop", function(resource)
 end)
 
 if Config.DisableHardCap then
+    local announce=false
     Queue:DebugPrint("^1 [connectqueue] Disabling hardcap ^7")
 
     AddEventHandler("onResourceStarting", function(resource)
@@ -824,19 +825,37 @@ if Config.DisableHardCap then
                     PerformHttpRequest("https://discord.com/api/v9/guilds/"..Config.discordServerGuild.."/preview", function (errorCode, rdata, resultHeaders)
                         local res=json.decode(rdata)
                         if errorCode == 200 then
+                            if not announce then
+                                announce=true
                             print('^6 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n  Bot Connect To '..res.name..' Server  \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                            end
                         elseif errorCode == 403 then
-                            print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Invite / ReInvite Bot xxxxxxxxxxxxxx \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                            if not announce then
+                                announce=true
+                                print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Invite / ReInvite Bot xxxxxxxxxxxxxx \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                            end
                         elseif errorCode == 401 then
-                            print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Check Discord Token xxxxxxxxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                            if not announce then
+                                announce=true
+                                print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Check Discord Token xxxxxxxxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                            end
                         end
                       end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
                 elseif errorCode == 403 then
-                    print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Invite/ReInvite Bot xxxxxxxxxxxxxx \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    if not announce then
+                        announce=true
+                        print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Invite/ReInvite Bot xxxxxxxxxxxxxx \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    end
                 elseif errorCode == 401 then
-                    print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Check Discord Token xxxxxxxxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    if not announce then
+                        announce=true
+                        print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Check Discord Token xxxxxxxxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    end
                 else
-                    print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxx Please Check Discord Token and Guild ID xxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    if not announce then
+                        announce=true
+                        print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxx Please Check Discord Token and Guild ID xxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                    end
 
                 end
               end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
