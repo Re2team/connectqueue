@@ -523,42 +523,46 @@ local function playerConnect(name, setKickReason, deferrals)
     end
     
 
-    if Config.enableDiscordWhitelist and currentDiscordID == "" then
-        -- prevent joining
-        done(Config.Language.whitelist.noDiscord)
-        CancelEvent()
-        Queue:DebugPrint("Dropped " .. name .. ", couldn't retrieve Discord id")
-        return
-        
-    else
-        
-        deferrals.update(Config.Language.whitelist.checkingRoles)
-        -- deferrals.update(Config.Language..connecting)
-        PerformHttpRequest("https://discord.com/api/v9/guilds/"..Config.discordServerGuild.."/members".."/"..string.sub(currentDiscordID, 9), function (errorCode, rdata, resultHeaders)
-            local res=json.decode(rdata)
-            if errorCode == 200 then
-                local roles = json.encode(res.roles)
-
-                for key, roleData in pairs(Config.Roles) do
-                    if string.find(roles,roleData.roleID) then
-                        print(roleData.point)
-                        point = point + roleData.point
-                        RoleStrings = RoleStrings .. key .." ,"
-                    end
-                end
-
-            end
-        end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
-        Wait(1000)
-
-        if point > 0 then
-            connecting = false
-            deferrals.update(Config.Language.whitelist.checkingQueue)
-
-        else
-            done(Config.Language.whitelist.noRole)
+    if enableDiscordWhitelist then
+        if Config.enableDiscordWhitelist and currentDiscordID == "" then
+            -- prevent joining
+            done(Config.Language.whitelist.noDiscord)
             CancelEvent()
-            return 
+            Queue:DebugPrint("Dropped " .. name .. ", couldn't retrieve Discord id")
+            return
+            
+        else
+            
+            deferrals.update(Config.Language.whitelist.checkingRoles)
+            -- deferrals.update(Config.Language..connecting)
+            PerformHttpRequest("https://discord.com/api/v9/guilds/"..Config.discordServerGuild.."/members".."/"..string.sub(currentDiscordID, 9), function (errorCode, rdata, resultHeaders)
+                local res=json.decode(rdata)
+                if errorCode == 200 then
+                    local roles = json.encode(res.roles)
+    
+                    for key, roleData in pairs(Config.Roles) do
+                        if string.find(roles,roleData.roleID) then
+                            print(roleData.point)
+                            point = point + roleData.point
+                            RoleStrings = RoleStrings .. key .." ,"
+                        end
+                    end
+    
+                end
+            end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
+            Wait(1000)
+    
+            
+    
+            if point > 0 then
+                connecting = false
+                deferrals.update(Config.Language.whitelist.checkingQueue)
+    
+            else
+                done(Config.Language.whitelist.noRole)
+                CancelEvent()
+                return 
+            end
         end
     end
 
