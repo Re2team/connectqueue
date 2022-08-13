@@ -522,8 +522,8 @@ local function playerConnect(name, setKickReason, deferrals)
         end
     end
     
-
-    if enableDiscordWhitelist then
+    -- print(enableDiscordWhitelist)
+    if Config.enableDiscordWhitelist then
         if Config.enableDiscordWhitelist and currentDiscordID == "" then
             -- prevent joining
             done(Config.Language.whitelist.noDiscord)
@@ -553,7 +553,7 @@ local function playerConnect(name, setKickReason, deferrals)
             Wait(1000)
     
             
-    
+            print(point)
             if point > 0 then
                 connecting = false
                 deferrals.update(Config.Language.whitelist.checkingQueue)

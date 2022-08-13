@@ -74,14 +74,14 @@ Config.discordBotToken = ""  -- Discord Token Bot - You Can Create at https://di
 
 
 Config.Roles = {
-	member = {
+	owner = {
 		roleID = "", --Role ID
 		point = 15,  -- any bigger point can push player on the first row of queue
 	},
-    vip = {
-		roleID = "", --Role ID
-		point = 20,  -- any bigger point can push player on the first row of queue
-	},
+    -- vip = {
+	-- 	roleID = "", --Role ID
+	-- 	point = 20,  -- any bigger point can push player on the first row of queue
+	-- },
 
 }
 
